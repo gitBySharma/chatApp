@@ -1,0 +1,96 @@
+:root {
+  --background-color: #ffffff;
+  --default-color: #212529;
+  --heading-color: #2d465e;
+  --accent-color: #5777ba;
+  --surface-color: #ffffff;
+  --contrast-color: #ffffff;
+}
+
+body {
+  color: var(--default-color);
+  background-color: var(--background-color);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+h1 {
+  color: var(--heading-color);
+}
+
+.icon {
+  color: #2d465e;
+  margin-right: 10px;
+  font-size: 4rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  background-color: var(--background-color);
+  padding: 15px 0;
+  transition: all 0.5s;
+  z-index: 997;
+}
+
+.header .logo h1 {
+  font-size: 48px;
+  margin: 0;
+  font-weight: 700;
+  color: var(--heading-color);
+}
+
+.hero {
+  width: 100%;
+  min-height: 70vh;
+  position: relative;
+  padding: 120px 0 60px 0;
+}
+
+.hero h2 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 56px;
+}
+
+.hero p {
+  color: rgba(33, 37, 41, 0.7);
+  margin: 5px 0 20px 0;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.custom-btn {
+  background-color: #5D7BB8;
+  border-color: #5D7BB8;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+  background-color: #bbd0f0;
+  border-color: #5D7BB8;
+  color: #fff;
+}
+
+.btn-outline-custom {
+  color: #5D7BB8;
+  border-color: #5D7BB8;
+}
+
+.btn-outline-custom:hover {
+  background-color: #5D7BB8;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .hero h2 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .hero p {
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 30px;
+  }
+}

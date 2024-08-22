@@ -6,7 +6,7 @@ const path = require('path');
 const sequelize = require('./util/database.js');
 
 const userRoutes = require('./routes/user.js');
-
+const homePageRoutes = require('./routes/homePage.js');
 
 const app = express();
 
@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+app.use(homePageRoutes);
 app.use(userRoutes);
 
 

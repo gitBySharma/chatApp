@@ -6,6 +6,7 @@ const chatsController = require('../controllers/chats.js');
 
 
 router.post('/message/sendMessage', authentication.authenticate, chatsController.postMessage);
+router.get('/message/getMessages', authentication.authenticate, chatsController.getMessages);
 
 
 module.exports = router;

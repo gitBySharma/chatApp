@@ -23,12 +23,34 @@ messageForm.addEventListener('submit', async (event) => {
 
         if (response.data.success) {
             messageInput.value = '';
-            const li = document.createElement('li');
-            li.innerHTML = `${response.data.name}: ${response.data.savedMessages.message}`;
-            chatMessagesDiv.appendChild(li);
+            displayMessages(response);
         }
 
     } catch (error) {
-        alert(error);
+        console.log(error);
     }
+});
+
+
+function displayMessages(response) {
+    const li = document.createElement('li');
+    li.innerHTML = `${response.data.name}: ${response.data.savedMessages.message}`;
+    chatMessagesDiv.appendChild(li);
+}
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const token = localStorage.getItem('token');
+    axios.get('/message/getMessages', { headers: { 'Authorization': token } })
+        .then((result) => {
+            const userName = result.data.name;
+            result.data.savedMessages.forEach((message) => {
+                const li = document.createElement('li');
+                li.innerHTML = `${userName}: ${message.message}`;
+                chatMessagesDiv.appendChild(li);
+            })
+
+        }).catch((err) => {
+            alert(err);
+        });
 });

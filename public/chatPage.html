@@ -12,76 +12,14 @@
         crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.min.css"
         rel="stylesheet">
-    <link rel="stylesheet" href="main.css">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-color: var(--background-color);
-        }
-
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 10px;
-            background-color: var(--surface-color);
-        }
-
-        .chat-header {
-            text-align: center;
-            padding: 10px;
-            background-color: var(--accent-color);
-            color: var(--contrast-color);
-            border-radius: 0 0 10px 10px;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            background-color: var(--surface-color);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .message {
-            padding: 10px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-        }
-
-        .message.user {
-            background-color: var(--accent-color);
-            color: var(--contrast-color);
-            text-align: right;
-        }
-
-        .message.other {
-            background-color: #e9ecef;
-            color: var(--default-color);
-            text-align: left;
-        }
-
-        .chat-input {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .chat-input input {
-            flex: 1;
-        }
-    </style>
+    <link rel="stylesheet" href="chatPage.css">
 </head>
 
 <body>
     <div class="chat-container container mt-4">
-        <div class="chat-header">
+        <div class="chat-header d-flex justify-content-between align-items-center">
             <h2>Chat App</h2>
+            <button id="logoutBtn" class="btn logout-btn">Logout</button>
         </div>
 
         <div class="chat-messages" id="chatMessages">
@@ -89,8 +27,15 @@
         </div>
 
         <div class="chat-input">
-            <input type="text" id="messageInput" class="form-control" placeholder="Type your message...">
-            <button type="button" class="btn custom-btn">Send</button>
+            <form id="messageForm" class="row g-2">
+                <div class="col">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Type your message..."
+                        required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn custom-btn" id="sendBtn">Send</button>
+                </div>
+            </form>
         </div>
     </div>
 

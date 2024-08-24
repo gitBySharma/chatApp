@@ -1,0 +1,109 @@
+:root {
+    --background-color: #ffffff;
+    --default-color: #212529;
+    --heading-color: #2d465e;
+    --accent-color: #5777ba;
+    --surface-color: #ffffff;
+    --contrast-color: #ffffff;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--background-color);
+}
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--surface-color);
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    background-color: var(--accent-color);
+    color: var(--contrast-color);
+    border-radius: 0 0 10px 10px;
+}
+
+.chat-header h2 {
+    margin: 0;
+}
+
+.logout-btn {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #ffffff;
+    border-color: #5D7BB8;
+    color: #5D7BB8;
+    transition: all 0.3s ease;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.message.user {
+    background-color: var(--accent-color);
+    color: var(--contrast-color);
+    text-align: right;
+}
+
+.message.other {
+    background-color: #e9ecef;
+    color: var(--default-color);
+    text-align: left;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.chat-input form {
+    display: flex;
+    width: 100%;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.chat-input button {
+    flex-shrink: 0;
+}
+
+.custom-btn {
+    background-color: #5D7BB8;
+    border-color: #5D7BB8;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+    background-color: #bbd0f0;
+    border-color: #5D7BB8;
+    color: #fff;
+}

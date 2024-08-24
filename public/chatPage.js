@@ -40,17 +40,21 @@ function displayMessages(response) {
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    const token = localStorage.getItem('token');
-    axios.get('/message/getMessages', { headers: { 'Authorization': token } })
-        .then((result) => {
-            const userName = result.data.name;
-            result.data.savedMessages.forEach((message) => {
-                const li = document.createElement('li');
-                li.innerHTML = `${userName}: ${message.message}`;
-                chatMessagesDiv.appendChild(li);
-            })
+    setInterval(() => {
+        const token = localStorage.getItem('token');
+        axios.get('/message/getMessages', { headers: { 'Authorization': token } })
+            .then((result) => {
+                const userName = result.data.name;
+                chatMessagesDiv.innerHTML = '';
+                result.data.savedMessages.forEach((message) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `${userName}: ${message.message}`;
+                    chatMessagesDiv.appendChild(li);
+                })
 
-        }).catch((err) => {
-            alert(err);
-        });
+            }).catch((err) => {
+                console.log(err);
+            });
+    }, 1000);
+
 });

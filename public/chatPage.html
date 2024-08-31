@@ -16,23 +16,43 @@
 </head>
 
 <body>
-    <div class="chat-container container mt-4">
-        <div class="chat-header d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex flex-column">
-                <h1 class="mb-0" id="welcomeMsg">Welcome, User</h1>
+    <div class="container mt-4 d-flex">
+        <!-- New Narrow Chat Container -->
+        <div class="narrow-chat-container">
+            <div class="chat-header d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex flex-column">
+                    <h1 class="mb-0" id="welcomeMsgNarrow">Groups</h1>
+                </div>
+                <button id="createGroupBtn" class="btn logout-btn">Create Group</button>
             </div>
-            <button id="logoutBtn" class="btn logout-btn">Logout</button>
+
+            <div class="group-list" id="groupList">
+                <!-- groups will be dynamically inserted here -->
+            </div>
         </div>
 
-        <div class="chat-messages" id="chatMessages">
-            <!-- Messages will be dynamically inserted here -->
-        </div>
+        <!-- Original Chat Container -->
+        <div class="chat-container flex-grow-1">
+            <div class="chat-header d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex flex-column">
+                    <h1 class="mb-0" id="welcomeMsg">Welcome User</h1>
+                </div>
+                <button id="normalChatBtn" class="btn btn-sm custom-btn ms-2" style="display: none;">Switch to Normal Chat</button>
+                <button id="inviteBtn" class="btn btn-sm custom-btn ms-2"  style="display: none;">Invite others</button>
+                <button id="logoutBtn" class="btn logout-btn">Logout</button>
+            </div>
 
-        <div class="chat-input mt-3">
-            <form id="messageForm" class="d-flex">
-                <input type="text" id="messageInput" class="form-control" placeholder="Type your message..." required>
-                <button type="submit" class="btn custom-btn ms-2" id="sendBtn">Send</button>
-            </form>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be dynamically inserted here -->
+            </div>
+
+            <div class="chat-input mt-3">
+                <form id="messageForm" class="d-flex">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Type your message..."
+                        required>
+                    <button type="submit" class="btn custom-btn ms-2" id="sendBtn">Send</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>

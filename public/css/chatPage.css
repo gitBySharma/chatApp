@@ -15,14 +15,36 @@ body {
     margin: 0;
 }
 
+.container {
+    display: flex;
+    height: calc(100vh - 10px);
+    margin-bottom: 10px;
+    padding: 0 10px; /* Changed from margin-left and margin-right to padding */
+}
+
 .chat-container {
-    flex: 1;
+    flex: 2;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 10px;
     background-color: var(--surface-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     height: 100%;
+}
+
+.narrow-chat-container {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    height: 100%;
+    margin-right: 20px;
 }
 
 .chat-header {
@@ -34,7 +56,6 @@ body {
     background-color: var(--accent-color);
     color: var(--contrast-color);
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .chat-header h1 {
@@ -60,7 +81,6 @@ body {
 .chat-messages {
     flex: 1;
     overflow-y: auto;
-    height: 300px;
     padding: 15px;
     background-color: var(--surface-color);
     border-radius: 10px;
@@ -118,4 +138,51 @@ body {
     background-color: #bbd0f0;
     border-color: #5D7BB8;
     color: #fff;
+}
+
+.group-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-height: calc(100vh - 100px);
+}
+
+.group-item {
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-weight: bolder;
+    cursor: pointer;
+    background-color: #f8f9fa; 
+    transition: background-color 0.3s ease; 
+}
+
+.group-item:hover {
+    background-color: #e2e6ea;
+}
+
+/* Ensure proper padding and alignment in the group-list */
+.group-list {
+    padding: 10px; /* Add padding to make space inside the container */
+    margin-bottom: 0; /* Remove bottom margin to align with container */
+}
+
+
+/* Add media query for responsive design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 0; /* Remove padding on smaller screens */
+    }
+
+    .narrow-chat-container,
+    .chat-container {
+        width: 100%; /* Make containers full-width on smaller screens */
+        margin-right: 0; /* Remove margin on smaller screens */
+        margin-bottom: 20px; /* Add some spacing between the two containers */
+    }
 }

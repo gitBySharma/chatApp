@@ -2,15 +2,24 @@ const sendBtn = document.getElementById("sendBtn");
 const messageForm = document.getElementById("messageForm");
 const messageInput = document.getElementById("messageInput");
 const chatMessagesDiv = document.getElementById('chatMessages');
+
+const dropdownMenuButton = document.getElementById("dropdownMenuButton");
 const logoutBtn = document.getElementById("logoutBtn");
 const normalChatBtn = document.getElementById("normalChatBtn");
 const inviteBtn = document.getElementById("inviteBtn");
+const promoteBtn = document.getElementById("promoteBtn");
+const demoteBtn = document.getElementById("demoteBtn");
+const removeUserBtn = document.getElementById("removeUserBtn");
+const leaveGroupBtn = document.getElementById("leaveGroupBtn");
+const deleteGroupBtn = document.getElementById("deleteGroupBtn");
 
 let currentGroupId = null;
+let fetchNewMessagesInterval;
 
 logoutBtn.addEventListener('click', (event) => {
     event.preventDefault();
     localStorage.removeItem('token');
+    localStorage.removeItem('normalMessages');
     window.location.href = 'homePage.html';
 });
 
@@ -53,11 +62,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     fetchGroups();
 
-    // setInterval(() => {
-    fetchNewMessages(token);
-    // }, 1000);
+    fetchNewMessagesInterval = setInterval(() => {
+        fetchNewMessages(token);
+    }, 1000);
 
-    NormalChatBtn_InviteBtn_State();
+    dropdownMenuButton_State();
 
 });
 
@@ -191,7 +200,7 @@ function switchGroups(groupId, groupName) {
     welcomeMsg.textContent = groupName;
     localStorage.removeItem(`groupMessages_${groupId}`);
     fetchNewMessages(localStorage.getItem('token'));
-    NormalChatBtn_InviteBtn_State();
+    dropdownMenuButton_State();
 }
 
 
@@ -203,17 +212,15 @@ function switchToNormalChat() {
     welcomeMsg.textContent = `Welcome ${decodedToken.name}`;
     localStorage.removeItem('normalMessages'); // Clear stored messages when switching to normal chat
     fetchNewMessages(localStorage.getItem('token'));
-    NormalChatBtn_InviteBtn_State();
+    dropdownMenuButton_State();
 }
 
 
-function NormalChatBtn_InviteBtn_State() {
+function dropdownMenuButton_State() {
     if (currentGroupId) {
-        normalChatBtn.style.display = 'block';
-        inviteBtn.style.display = 'block';
+        dropdownMenuButton.style.display = 'block';
     } else {
-        normalChatBtn.style.display = 'none';
-        inviteBtn.style.display = 'none';
+        dropdownMenuButton.style.display = 'none';
     }
 }
 
@@ -229,7 +236,7 @@ inviteBtn.addEventListener('click', async (event) => {
             const response = await axios.post(`/group/inviteToGroup/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
 
             if (response.data.success) {
-                alert("User invited successfully");
+                alert("User added successfully");
 
             }
 
@@ -256,16 +263,185 @@ inviteBtn.addEventListener('click', async (event) => {
 });
 
 
-// async function fetchGroupMessages(groupId) {
-//     try {
-//         const token = localStorage.getItem('token');
-//         const response = await axios.get(`/message/getGroupMessages/${groupId}`, { headers: { 'Authorization': token } });
-//         if (response.data.success) {
-//             displayMessages(response.data.savedMessages);
-//         }
+promoteBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const userEmail = prompt("Enter the email of the user to be made admin:");
 
-//     } catch (error) {
-//         console.log(error);
-//         alert("Unable to fetch group messages");
-//     }
-// }
+    if (userEmail) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/admin/promote/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
+            if (response.data.success) {
+                alert(`${userEmail} is now an admin`);
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while promoting user");
+                }
+            } else {
+                alert("Error promoting user, failed !!");
+                console.log(error);
+            }
+
+        }
+
+    } else {
+        alert("email field can't be empty");
+    }
+});
+
+
+demoteBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const userEmail = prompt("Enter the email of the user to be demoted:");
+
+    if (userEmail) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/admin/demote/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
+            if (response.data.success) {
+                alert(`${userEmail} successfully removed from admin`);
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while demoting user");
+                }
+            } else {
+                alert("Error demoting user, failed !!");
+                console.log(error);
+            }
+
+        }
+
+    } else {
+        alert("email field can't be empty");
+    }
+});
+
+
+removeUserBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const userEmail = prompt("Enter the email of the user to be removed:");
+
+    if (userEmail) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/admin/removeUser/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
+            if (response.data.success) {
+                alert(`${userEmail} is removed from the group successfully`);
+                fetchGroups();
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while removing user");
+                }
+            } else {
+                alert("Error removing user, failed !!");
+                console.log(error);
+            }
+
+        }
+
+    } else {
+        alert("email field can't be empty");
+    }
+});
+
+
+leaveGroupBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const confirmation = confirm("Are you sure you want to leave the group?");
+
+    if (confirmation) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/group/leaveGroup/${currentGroupId}`, {}, { headers: { 'Authorization': token } });
+
+            if (response.data.success) {
+                alert("You have left the group successfully");
+                fetchGroups();
+                switchToNormalChat();
+                clearInterval(fetchNewMessagesInterval);
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while leaving group");
+
+                }
+            } else {
+                alert("Error leaving group, failed !!");
+                console.log(error);
+            }
+
+        }
+    }
+});
+
+
+deleteGroupBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const confirmation = confirm("Are you sure you want to delete the group?");
+
+    if (confirmation) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.delete(`/group/deleteGroup/${currentGroupId}`, { headers: { 'Authorization': token } });
+
+            if (response.data.success) {
+                alert("Group deleted successfully");
+                fetchGroups();
+                switchToNormalChat();
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred in deletion");
+
+                }
+            } else {
+                alert("Error deleting group, failed !!");
+                console.log(error);
+            }
+
+        }
+    }
+});

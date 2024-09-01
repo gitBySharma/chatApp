@@ -25,6 +25,10 @@ const UserGroup = sequelize.define('UserGroup', {
             model: 'groups',
             key: 'id'
         }
+    },
+    role: {
+        type: Sequelize.ENUM('member', 'admin'),
+        defaultValue: 'member'
     }
 });
 

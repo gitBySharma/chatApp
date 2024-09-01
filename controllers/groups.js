@@ -18,7 +18,8 @@ exports.createGroup = async (req, res, next) => {
 
         await UserGroup.create({
             userId: req.user.id,
-            groupId: group.id
+            groupId: group.id,
+            role: 'admin'
         })
         res.status(200).json({ message: 'Group created successfully', group, success: true });
 
@@ -152,8 +153,8 @@ exports.getGroupMessages = async (req, res, next) => {
 exports.inviteToGroup = async (req, res, next) => {
     const currentGroupId = req.params.currentGroupId;
     try {
-        const invitingUser = await Group.findOne({ where: { createdBy_id: req.user.id } });
-        if (!invitingUser) {
+        const invitingUser = await UserGroup.findOne({ where: { userId: req.user.id, groupId: currentGroupId } });
+        if (!invitingUser || invitingUser.role !== 'admin') {
             return res.status(403).json({ message: 'Only admin is allowed to invite others', success: false });
         }
 
@@ -174,5 +175,41 @@ exports.inviteToGroup = async (req, res, next) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Error inviting user', success: false });
+    }
+};
+
+
+exports.leaveGroup = async (req, res, next) => {
+    const groupId = req.params.groupId;
+    const userId = req.user.id;
+
+    try {
+        // Check if the user is a member of the group
+        const userGroup = await UserGroup.findOne({
+            where: { userId: userId, groupId: groupId }
+        });
+
+        if (!userGroup) {
+            return res.status(403).json({ message: 'You are not a member of this group', success: false });
+        }
+
+        // Check if the group is created by the user
+        const group = await Group.findOne({
+            where: { id: groupId, createdBy_id: userId }
+        });
+
+        if (group) {
+            return res.status(404).json({ message: 'You cannot leave a group you created', success: false });
+        }
+
+        // Remove the user from the group
+        await UserGroup.destroy({
+            where: { userId: userId, groupId: groupId }
+        });
+
+        res.status(200).json({ message: 'Successfully left the group', success: true });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error leaving group', success: false });
     }
 };

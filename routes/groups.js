@@ -14,4 +14,7 @@ router.get('/message/getGroupMessages/:groupId', authentication.authenticate, gr
 
 router.post('/group/inviteToGroup/:currentGroupId', authentication.authenticate, groupController.inviteToGroup);
 
+router.post('/group/leaveGroup/:groupId', authentication.authenticate, groupController.leaveGroup);
+
+
 module.exports = router;

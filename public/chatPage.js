@@ -2,7 +2,6 @@ const sendBtn = document.getElementById("sendBtn");
 const messageForm = document.getElementById("messageForm");
 const messageInput = document.getElementById("messageInput");
 const chatMessagesDiv = document.getElementById('chatMessages');
-
 const dropdownMenuButton = document.getElementById("dropdownMenuButton");
 const logoutBtn = document.getElementById("logoutBtn");
 const normalChatBtn = document.getElementById("normalChatBtn");
@@ -12,9 +11,15 @@ const demoteBtn = document.getElementById("demoteBtn");
 const removeUserBtn = document.getElementById("removeUserBtn");
 const leaveGroupBtn = document.getElementById("leaveGroupBtn");
 const deleteGroupBtn = document.getElementById("deleteGroupBtn");
+const createGroupBtn = document.getElementById('createGroupBtn');
+const groupList = document.getElementById('groupList');
+const attachBtn = document.getElementById("attachBtn");
+const fileInput = document.getElementById("fileInput");
+
 
 let currentGroupId = null;
 let fetchNewMessagesInterval;
+
 
 logoutBtn.addEventListener('click', (event) => {
     event.preventDefault();
@@ -67,6 +72,35 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }, 1000);
 
     dropdownMenuButton_State();
+
+
+    //multimedia sharing features -->
+    attachBtn.addEventListener('click', (event) => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        const token = localStorage.getItem('token');
+
+        if (file) {
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await axios.post('/file/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data', 'Authorization': token }
+                });
+
+                if (response.data.success) {
+                    messageInput.value = response.data.fileUrl;
+                }
+
+            } catch (error) {
+                console.log("File upload error", error)
+            }
+        }
+    });
 
 });
 
@@ -136,11 +170,39 @@ async function fetchNewMessages(token) {
 }
 
 
+// attachBtn.addEventListener('click', (event) => {
+//     // event.preventDefault();
+//     fileInput.click();
+// });
+
+
+// fileInput.addEventListener('click', async (event) => {
+//     // event.preventDefault();
+//     const file = event.target.files[0];
+//     const token = localStorage.getItem('token');
+
+//     if (file) {
+//         try {
+//             const formData = new FormData();
+//             formData.append('file', file);
+
+//             const response = await axios.post('/file/upload', formData, {
+//                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': token }
+//             });
+
+//             if (response.data.success) {
+//                 messageInput.value = response.data.fileUrl;
+//             }
+
+//         } catch (error) {
+//             console.log("File upload error", error)
+//         }
+//     }
+// });
+
+
 
 // <- groups ->
-const createGroupBtn = document.getElementById('createGroupBtn');
-const groupList = document.getElementById('groupList');
-
 
 createGroupBtn.addEventListener('click', async (event) => {
     event.preventDefault();
@@ -206,11 +268,14 @@ function switchGroups(groupId, groupName) {
 
 function switchToNormalChat() {
     currentGroupId = null;
+
     chatMessagesDiv.innerHTML = '';
     const welcomeMsg = document.getElementById("welcomeMsg");
     const decodedToken = jwt_decode(localStorage.getItem('token'));
     welcomeMsg.textContent = `Welcome ${decodedToken.name}`;
+
     localStorage.removeItem('normalMessages'); // Clear stored messages when switching to normal chat
+
     fetchNewMessages(localStorage.getItem('token'));
     dropdownMenuButton_State();
 }
@@ -225,6 +290,7 @@ function dropdownMenuButton_State() {
 }
 
 normalChatBtn.addEventListener('click', switchToNormalChat);
+
 
 inviteBtn.addEventListener('click', async (event) => {
     event.preventDefault();
@@ -421,8 +487,11 @@ deleteGroupBtn.addEventListener('click', async (event) => {
 
             if (response.data.success) {
                 alert("Group deleted successfully");
-                fetchGroups();
-                switchToNormalChat();
+                // fetchGroups();
+                // switchToNormalChat();
+                // return;
+                localStorage.removeItem(`groupMessages_${currentGroupId}`);
+                window.location.reload();
             }
 
         } catch (error) {

@@ -1,6 +1,9 @@
 const User = require('../models/users.js');
 const Chats = require('../models/chats.js');
+const FileUrls = require('../models/fileUrls.js');
+
 const Sequelize = require('sequelize');
+const AWS = require("aws-sdk");
 
 require('dotenv').config();
 
@@ -73,6 +76,45 @@ exports.getMessages = async (req, res, next) => {
         }));
 
         res.status(200).json({ savedMessages: mappedMessages, success: true });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal server error", success: false });
+    }
+};
+
+
+const s3 = new AWS.S3({
+    accessKeyId: process.env.IAM_USER_ACCESS_KEY,
+    secretAccessKey: process.env.IAM_USER_SECRET,
+    Bucket: "groupchatapp1133"
+});
+
+exports.uploadFile = async (req, res, next) => {
+    console.log("req object", req.file);
+    try {
+
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded", success: false });
+        }
+
+        const fileName = `Upload_${req.user.id}/${req.file.originalname}`;
+
+        const params = {
+            Bucket: "groupchatapp1133",
+            Key: fileName,
+            Body: req.file.buffer,
+            ContentType: req.file.mimetype,
+            ACL: "public-read"
+        };
+
+        const uploadResponse = await s3.upload(params).promise();
+
+        const fileUrl = await FileUrls.create({
+            url: uploadResponse.Location,
+        });
+
+        res.status(200).json({ message: "File uploaded successfully", fileUrl: fileUrl.url, success: true });
 
     } catch (error) {
         console.log(error);

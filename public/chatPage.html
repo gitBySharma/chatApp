@@ -63,6 +63,10 @@
                 <form id="messageForm" class="d-flex">
                     <input type="text" id="messageInput" class="form-control" placeholder="Type your message..."
                         required>
+                        <input type="file" id="fileInput" class="d-none" accept="image/*,video/*">
+                        <button type="button" class="btn custom-btn ms-2" id="attachBtn">
+                            <i class="bi bi-paperclip"></i> Attach
+                        </button>
                     <button type="submit" class="btn custom-btn ms-2" id="sendBtn">Send</button>
                 </form>
             </div>
